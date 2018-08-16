@@ -23,7 +23,8 @@ def parse_wallpapers(wallpapers_dom_nodes):
         Extracts links from <ul>. It can contains links to image in several resolutions, divided
         to next groups - preview, with calendar, without calendar
         :param ul_node: list of AdvancedTag
-        :return: dictionary where keys is links group name and value is list of links
+        :return: dictionary where keys is links group name and value is list of dict
+        where link is value and resolution is key.
         '''
         wallpaper_links = {}
         for links_group in ul_node.getChildren():
@@ -34,7 +35,10 @@ def parse_wallpapers(wallpapers_dom_nodes):
                 links = []
 
                 for link in links_group.getChildren():
-                    links.append(link.href)
+                    res_link_pair = dict()
+                    res_link_pair[link.text] = link.href
+
+                    links.append(res_link_pair)
 
                 wallpaper_links[links_group_name] = links
 
