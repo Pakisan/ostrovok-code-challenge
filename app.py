@@ -1,6 +1,8 @@
-import json
-import page_parser
-import wallpapers_parser
+import argparse
+import urllib
+import urllib.request
+import os
+
 import storage
 
 
@@ -10,22 +12,30 @@ def load_html(path_to_html_file):
 
 
 def main():
-    html = load_html('/home/pbodyachevsky/PycharmProjects/untitled/wallpapers.html')
-    wallpapers_nodes = page_parser.parse_page(html)
-    date = page_parser.extract_date(html)
-    wallpapers = wallpapers_parser.parse_wallpapers(wallpapers_nodes)
+    parser = argparse.ArgumentParser(description='Wallpapers downloader')
+    parser.add_argument('-y', '--year', required=True)
+    parser.add_argument('-m', '--month', required=True)
+    parser.add_argument('-r', '--resolution', required=True)
+    args = parser.parse_args()
 
-    for wallpaper in wallpapers:
-        wallpaper.year = date['year']
-        wallpaper.month = date['month']
+    links = storage.find_wallpapers_links(args.resolution, args.year, args.month)
 
-    storage.create()
-    storage.save(wallpapers)
+    if not os.path.exists('./wallpapers'):
+        os.makedirs('./wallpapers')
 
-    links = storage.find_wallpapers_links('full', '2017', '12')
+    for link in links:
+        download_wallpaper(link)
 
-    print(links)
-    print(json.dumps([ob.__dict__ for ob in wallpapers]))
+    print('found %s wallpapers. Downloaded to ./wallpapers' % len(links))
+
+
+def download_wallpaper(link):
+    try:
+        # Download the file from `url` and save it locally
+        file_extension = link[0].split('/')[-1].split('.')[1]
+        urllib.request.urlretrieve(link[0], './wallpapers/%s.%s' % (link[1], file_extension))
+    except Exception as e:
+        print('Failed to download %s: %s' % (link[0], str(e)))
 
 
 if __name__ == "__main__":

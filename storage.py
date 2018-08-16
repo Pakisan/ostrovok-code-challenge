@@ -76,7 +76,7 @@ def find_wallpapers_links(resolution, year, month):
     cursor = conn.cursor()
 
     cursor.execute(
-        """SELECT wallpaper_links.link FROM wallpapers
+        """SELECT wallpaper_links.link, wallpapers.name FROM wallpapers
                 LEFT JOIN wallpaper_links ON wallpaper_links.wallpaper_id = wallpapers.id
             WHERE wallpapers.year = ? and wallpapers.month = ? and wallpaper_links.resolution = ?""",
         (year, month, resolution))

@@ -31,3 +31,16 @@ wallpaper consists of next HTML tags:
 scrapy
 AdvancedHTMLParser
 ```
+
+## How to work with:
+Repo contains pre-filled sqlite database, which you can use for wallpaper downloading.
+
+To download images posted on 12 2017 in full-size resolution
+```python
+python app.py -y 2017 -m 12 -r full
+```
+
+To dump wallpapers from https://www.smashingmagazine.com/category/wallpapers
+```sh
+scrapy runspider spider.py 
+```
