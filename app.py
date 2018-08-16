@@ -1,4 +1,6 @@
+import json
 import page_parser
+import wallpapers_parser
 
 
 def load_html(path_to_html_file):
@@ -8,7 +10,10 @@ def load_html(path_to_html_file):
 
 def main():
     html = load_html('/home/pbodyachevsky/PycharmProjects/untitled/wallpapers.html')
-    print(page_parser.parse_page(html))
+    wallpapers_nodes = page_parser.parse_page(html)
+    wallpapers = wallpapers_parser.parse_wallpapers(wallpapers_nodes)
+
+    print(json.dumps([ob.__dict__ for ob in wallpapers]))
 
 
 if __name__ == "__main__":

@@ -1,12 +1,12 @@
-import scrapy
 import AdvancedHTMLParser
+import scrapy
 
 
 def parse_page(html):
     '''
     Extracts wallpapers from given page.
     :param html: page as html
-    :return: empty string
+    :return: dom nodes, which contains tags with wallpapers data.
     '''
     div_with_wallpapers = scrapy.Selector(text=html).css('.c-garfield-the-cat').extract()[0]
 
@@ -14,13 +14,9 @@ def parse_page(html):
 
     html_parser.parseStr(div_with_wallpapers)
     html_nodes = html_parser.getRootNodes()
+    wallpapers_nodes = clean_nodes(html_nodes[0].getChildren())
 
-    for html_node in html_nodes:
-        wallpapers_nodes = clean_nodes(html_node.getChildren())
-        for wallpapers_node in wallpapers_nodes:
-            print(" children: '%s'" % wallpapers_node)
-
-    return ''
+    return wallpapers_nodes
 
 
 def clean_nodes(html_nodes):
@@ -80,17 +76,8 @@ def clean_nodes(html_nodes):
         if last_wallpaper_html_tag_predicate(html_node):
             last_wallpaper_index = index
 
-    print("firs wallpaper <figure> index: %s" % first_wallpaper_index)
-    print("last wallpaper <figure> index: %s" % last_wallpaper_index)
-
-    print('after cleanup: ')
     first_wallpaper_index = determine_start_of_wallpapers(html_nodes, first_wallpaper_index)
     last_wallpaper_index = determine_end_of_wallpapers(html_nodes, last_wallpaper_index)
-
-    print("firs wallpaper tag index: %s" % first_wallpaper_index)
-    print(html_nodes[first_wallpaper_index].tagName)
-    print("last wallpaper tag index: %s" % last_wallpaper_index)
-    print(html_nodes[last_wallpaper_index].tagName)
 
     # TODO: fix incorrect slice by last index.
     return html_nodes[first_wallpaper_index:last_wallpaper_index]
