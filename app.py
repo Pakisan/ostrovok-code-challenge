@@ -1,6 +1,7 @@
 import json
 import page_parser
 import wallpapers_parser
+import storage
 
 
 def load_html(path_to_html_file):
@@ -18,6 +19,12 @@ def main():
         wallpaper.year = date['year']
         wallpaper.month = date['month']
 
+    storage.create()
+    storage.save(wallpapers)
+
+    links = storage.find_wallpapers_links('full', '2017', '1')
+
+    print(links)
     print(json.dumps([ob.__dict__ for ob in wallpapers]))
 
 
