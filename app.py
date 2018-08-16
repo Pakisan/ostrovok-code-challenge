@@ -22,7 +22,7 @@ def main():
     storage.create()
     storage.save(wallpapers)
 
-    links = storage.find_wallpapers_links('full', '2017', '1')
+    links = storage.find_wallpapers_links('full', '2017', '12')
 
     print(links)
     print(json.dumps([ob.__dict__ for ob in wallpapers]))
