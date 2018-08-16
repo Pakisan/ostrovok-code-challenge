@@ -3,6 +3,8 @@ class Wallpaper:
     description = ''
     preview_url = ''
     links = ''
+    month = ''
+    year = ''
 
     def __init__(self):
         pass

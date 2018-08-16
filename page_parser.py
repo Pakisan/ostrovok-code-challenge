@@ -2,6 +2,21 @@ import AdvancedHTMLParser
 import scrapy
 
 
+def extract_date(html):
+    div_with_wallpapers = scrapy.Selector(text=html).css('.c-garfield-the-cat').extract()[0]
+
+    html_parser = AdvancedHTMLParser.AdvancedHTMLParser()
+    html_parser.parseStr(div_with_wallpapers)
+
+    dateTime = html_parser.getRootNodes()[0].getElementsByClassName('article__date')[0].dateTime.split('-')
+
+    date = dict()
+    date['month'] = dateTime[1]
+    date['year'] = dateTime[0]
+
+    return date
+
+
 def parse_page(html):
     '''
     Extracts wallpapers from given page.
